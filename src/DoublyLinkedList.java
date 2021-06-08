@@ -1,12 +1,14 @@
 public class DoublyLinkedList {
 
-    private listNode first = null;
-    private listNode last = null;
+    private ListNode first = null;
+    private ListNode last = null;
     private int length;
 
+    //TODO: find and remove functions
 
-    public void insert_first(listNode value){
-        listNode node = new listNode(value,null,null);
+
+    public void insert_first(ListNode value){
+        ListNode node = new ListNode(value,null,null);
         node.next = this.first;
         this.first = node;
         if(node.next == null){
@@ -15,13 +17,24 @@ public class DoublyLinkedList {
         this.length++;
     }
 
-    public class listNode{
+//    public boolean find(Graph.Node node){
+//        ListNode listNode = first;
+//        while(listNode != null){
+//            if(listNode.value.getId() == node.getId()) {
+//                return true;
+//            }
+//            listNode = listNode.next;
+//        }
+//        return false;
+//    }
 
-        private listNode value;
-        private listNode next;
-        private listNode prev;
+    public class ListNode{
 
-        public listNode(listNode value,listNode next,listNode prev){
+        private ListNode value;
+        private ListNode next;
+        private ListNode prev;
+
+        public ListNode(ListNode value,ListNode next,ListNode prev){
             this.value = value;
             this.next = next;
             this.prev = prev;

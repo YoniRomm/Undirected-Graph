@@ -1,5 +1,7 @@
 public class MaxHeap {
 
+    //TODO: init maxheap from array
+
     private heapNode [] arr;
     private int lastIndex = 0;
     private int size;

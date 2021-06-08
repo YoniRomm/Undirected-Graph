@@ -10,6 +10,12 @@ You are allowed to add classes, methods, and members as required.
  *
  */
 public class Graph {
+
+    private MaxHeap maxHeap;
+    private HashTable hashTable;
+
+
+
     /** O(N)
      * Initializes the graph on a given set of nodes. The created graph is empty, i.e. it has no edges.
      * You may assume that the ids of distinct nodes are distinct.
@@ -17,7 +23,12 @@ public class Graph {
      * @param nodes - an array of node objects
      */
     public Graph(Node [] nodes){
-        //TODO: implement this method.
+        this.maxHeap = new MaxHeap(nodes.length);
+        hashTable = new HashTable(nodes.length);
+        for(Node node : nodes){
+            //TODO: add node to max heap
+
+        }
     }
 
     /**
@@ -72,7 +83,7 @@ public class Graph {
     /**
      * This class represents a node in the graph.
      */
-    public class Node{
+    public static class Node{
 
         private int id;
         private int weight;
