@@ -27,6 +27,7 @@ public class Graph {
      * @param nodes - an array of node objects
      */
     public Graph(Node [] nodes){
+        //TODO: init max heap in O(N)
         this.maxHeap = new MaxHeap(nodes.length);
         hashTable = new HashTable(nodes.length);
         for(Node node : nodes){
@@ -39,7 +40,7 @@ public class Graph {
         num_Nodes = nodes.length;
     }
 
-    /**
+    /** O(1)
      * This method returns the node in the graph with the maximum neighborhood weight.
      * Note: nodes that have been removed from the graph using deleteNode are no longer in the graph.
      * @return a Node object representing the correct node. If there is no node in the graph, returns 'null'.
@@ -49,7 +50,7 @@ public class Graph {
         return heapNode.hashListNode.value;
     }
 
-    /**
+    /** O(1)
      * given a node id of a node in the graph, this method returns the neighborhood weight of that node.
      *
      * @param node_id - an id of a node.
@@ -57,6 +58,7 @@ public class Graph {
      * Otherwise, the function returns -1.
      */
     public int getNeighborhoodWeight(int node_id){
+        //TODO: check this function in tester
         HashListNode hashListNode = this.hashTable.Find(node_id);
         if(hashListNode == null){
             return -1;
@@ -64,7 +66,7 @@ public class Graph {
         return hashListNode.heapNode.key;
     }
 
-    /**
+    /** O(log n)
      * This function adds an edge between the two nodes whose ids are specified.
      * If one of these nodes is not in the graph, the function does nothing.
      * The two nodes must be distinct; otherwise, the function does nothing.
@@ -86,17 +88,18 @@ public class Graph {
         node1.value = node2;
         hashListNode1.neighbors.insert_first(node2);
         int index = hashListNode1.heapNode.index;
-        this.maxHeap.decrease_key(index,hashListNode2.value.weight);
+        this.maxHeap.decrease_key(index,hashListNode2.value.weight); // O(log n)
         hashListNode2.neighbors.insert_first(node1);
         int index2 = hashListNode2.heapNode.index;
-        this.maxHeap.decrease_key(index2,hashListNode1.value.weight);
+        this.maxHeap.decrease_key(index2,hashListNode1.value.weight); // O(log n)
 
         this.num_Edges++;
+        //TODO: check numedges and nodes
 
         return true;
     }
 
-    /**
+    /** O((#neigbors+1)logn)
      * Given the id of a node in the graph, deletes the node of that id from the graph, if it exists.
      *
      * @param node_id - the id of the node to delete.
@@ -108,14 +111,14 @@ public class Graph {
             return false;
         }
         this.hashTable.Delete(hashListNode1);
-        maxHeap.Delete(hashListNode1.heapNode.index);
+        maxHeap.Delete(hashListNode1.heapNode.index); // O(log n)
         ListNode node = hashListNode1.neighbors.first;
         while (node != null){
             ListNode listNodeNeighbor = node.value;
-            listNodeNeighbor.hashListNode.neighbors.delete(listNodeNeighbor);
+            listNodeNeighbor.hashListNode.neighbors.delete(listNodeNeighbor); // O(1)
             int index = listNodeNeighbor.hashListNode.heapNode.index;
             int weight = hashListNode1.value.weight;
-            this.maxHeap.decrease_key(index,-weight);
+            this.maxHeap.decrease_key(index,-weight); // O(log n)
             node = node.next;
             this.num_Edges--;
         }
@@ -124,7 +127,7 @@ public class Graph {
         return true;
     }
 
-    /**
+    /** O(1)
      * Returns the number of nodes currently in the graph.
      * @return the number of nodes in the graph.
      */
@@ -132,7 +135,7 @@ public class Graph {
         return num_Nodes;
     }
 
-    /**
+    /** O(1)
      * Returns the number of edges currently in the graph.
      * @return the number of edges currently in the graph.
      */
@@ -488,9 +491,6 @@ public class Graph {
         }
 
     }
-
-
-
 }
 
 
