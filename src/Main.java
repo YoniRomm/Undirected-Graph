@@ -18,6 +18,9 @@ public class Main {
         array[2] = node3;
 
         Graph graph = new Graph(array);
+        graph.addEdge(node1.getId(),node2.getId());
+        graph.addEdge(node1.getId(), node3.getId());
+        graph.addEdge(node2.getId(), node3.getId());
 
     }
 }

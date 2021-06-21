@@ -15,6 +15,8 @@ public class Graph {
 
     private MaxHeap maxHeap;
     private HashTable hashTable;
+    private int num_Nodes;
+    private int num_Edges;
 
 
 
@@ -34,6 +36,7 @@ public class Graph {
             this.maxHeap.insert(heapNode);
             heapNode.hashListNode = hashListNode;
         }
+        num_Nodes = nodes.length;
     }
 
     /**
@@ -72,8 +75,25 @@ public class Graph {
      * @return returns 'true' if the function added an edge, otherwise returns 'false'.
      */
     public boolean addEdge(int node1_id, int node2_id){
-        //TODO: implement this method.
-        return false;
+        HashListNode hashListNode1 = this.hashTable.Find(node1_id);
+        HashListNode hashListNode2 = this.hashTable.Find(node2_id);
+
+        if (hashListNode1 == null || hashListNode2 == null){
+            return false;
+        }
+        ListNode node1 = new ListNode(null, hashListNode2);
+        ListNode node2 = new ListNode(node1, hashListNode1);
+        node1.value = node2;
+        hashListNode1.neighbors.insert_first(node2);
+        int index = hashListNode1.heapNode.index;
+        this.maxHeap.decrease_key(index,hashListNode2.value.weight);
+        hashListNode2.neighbors.insert_first(node1);
+        int index2 = hashListNode2.heapNode.index;
+        this.maxHeap.decrease_key(index2,hashListNode1.value.weight);
+
+        this.num_Edges++;
+
+        return true;
     }
 
     /**
@@ -83,8 +103,41 @@ public class Graph {
      * @return returns 'true' if the function deleted a node, otherwise returns 'false'
      */
     public boolean deleteNode(int node_id){
-        //TODO: implement this method.
-        return false;
+        HashListNode hashListNode1 = this.hashTable.Find(node_id);
+        if (hashListNode1 == null){
+            return false;
+        }
+        this.hashTable.Delete(hashListNode1);
+        maxHeap.Delete(hashListNode1.heapNode.index);
+        ListNode node = hashListNode1.neighbors.first;
+        while (node != null){
+            ListNode listNodeNeighbor = node.value;
+            listNodeNeighbor.hashListNode.neighbors.delete(listNodeNeighbor);
+            int index = listNodeNeighbor.hashListNode.heapNode.index;
+            int weight = hashListNode1.value.weight;
+            this.maxHeap.decrease_key(index,-weight);
+            node = node.next;
+            this.num_Edges--;
+        }
+        this.num_Nodes--;
+
+        return true;
+    }
+
+    /**
+     * Returns the number of nodes currently in the graph.
+     * @return the number of nodes in the graph.
+     */
+    public int getNumNodes(){
+        return num_Nodes;
+    }
+
+    /**
+     * Returns the number of edges currently in the graph.
+     * @return the number of edges currently in the graph.
+     */
+    public int getNumEdges(){
+        return num_Edges;
     }
 
 
@@ -124,33 +177,6 @@ public class Graph {
         }
     }
 
-    public class heapNode {
-        private int key; //sumWieghts
-        private int value; // id of the node
-        private HashListNode hashListNode; //pointer to the node in hashtable
-
-        public heapNode(int sumWeights,int idOfTheNode){
-            this.key = sumWeights;
-            this.value = idOfTheNode;
-        }
-
-        public int getKey() {
-            return key;
-        }
-
-        public void setKey(int key) {
-            this.key = key;
-        }
-
-        public int getValue() {
-            return value;
-        }
-
-        public void setValue(int value) {
-            this.value = value;
-        }
-    }
-
     public class MaxHeap {
 
         private heapNode [] arr;
@@ -166,17 +192,21 @@ public class Graph {
         public void insert(heapNode node){
             this.lastIndex++;
             arr[lastIndex] = node;
+            node.index = lastIndex;
             heapify_up(lastIndex);
         }
 
         public void DeleteMax(){
-
+            switchNodes(1,lastIndex);
+            lastIndex--;
+            heapify_down(1);
         }
+
         public heapNode Max(){
             return arr[1];
         }
 
-        public void Decrease_key(int i,int sum){
+        public void decrease_key(int i, int sum){
             arr[i].setKey(arr[i].getKey()+sum);
             if(sum < 0){
                 heapify_down(i);
@@ -186,9 +216,14 @@ public class Graph {
         }
 
         public void Delete(int i){
+            if(i==1){
+                DeleteMax();
+                return;
+            }
             switchNodes(i,lastIndex);
             lastIndex--;
-            if(arr[i].key > arr[getParentIndex(i)].key){
+            int parent_index = getParentIndex(i);
+            if(arr[i].key > arr[parent_index].key){
                 heapify_up(i);
             }
             else{
@@ -238,6 +273,36 @@ public class Graph {
             heapNode temp = arr[i];
             arr[i] = arr[parent];
             arr[parent] = temp;
+            arr[i].index = i;
+            arr[parent].index = parent;
+        }
+    }
+
+    public class heapNode {
+        private int key; //sumWieghts
+        private int value; // id of the node
+        private int index; // index in maxHeap
+        private HashListNode hashListNode; //pointer to the node in hashtable
+
+        public heapNode(int sumWeights,int idOfTheNode){
+            this.key = sumWeights;
+            this.value = idOfTheNode;
+        }
+
+        public int getKey() {
+            return key;
+        }
+
+        public void setKey(int key) {
+            this.key = key;
+        }
+
+        public int getValue() {
+            return value;
+        }
+
+        public void setValue(int value) {
+            this.value = value;
         }
     }
 
@@ -271,8 +336,24 @@ public class Graph {
             return null;
         }
 
-        public void remove(Graph.Node node) {
-            //TODO: remove
+        public void remove(HashListNode listNode){
+            if(listNode == this.first && listNode == this.last){
+                this.first = null;
+                this.last = null;
+                return;
+            }
+            if(listNode == this.first){
+                this.first = listNode.next;
+                this.first.prev = null;
+                return;
+            }
+            if(listNode == this.last){
+                this.last = listNode.prev;
+                this.last.next = null;
+                return;
+            }
+            listNode.prev.next = listNode.next;
+            listNode.next.prev = listNode.prev;
         }
     }
 
@@ -287,7 +368,7 @@ public class Graph {
         public HashListNode(Graph.Node value, Graph.heapNode heapNode) {
             this.value = value;
             this.heapNode = heapNode;
-            this.neighbors = new DoublyLinkedList();
+            this.neighbors = new DoublyLinkedList(this);
         }
 
         public Graph.Node getValue() {
@@ -336,35 +417,33 @@ public class Graph {
 
         public void Insert(HashListNode hash_node){
             Graph.Node node = hash_node.getValue();
-            int IndexOfInsertion = IndexOfHash(node);
+            int IndexOfInsertion = IndexOfHash(node.getId());
             if (Find(node.getId()) == null){
                 this.array[IndexOfInsertion].insert_first(node,hash_node.getHeapNode());
             }
         }
         public void Delete(HashListNode hash_node){
-            Graph.Node node = hash_node.getValue();
-            HashListNode state = Find(node.getId());
-            int IndexOfDeletion = IndexOfHash(node);
-            if (state != null){
-                this.array[hashFunction.hashFunction(node.getId())].remove(node);
-            }
+            int IndexOfDeletion = IndexOfHash(hash_node.value.id);
+            this.array[IndexOfDeletion].remove(hash_node);
         }
-        private int IndexOfHash(Graph.Node node){
-            return this.hashFunction.hashFunction(node.getId());
+        private int IndexOfHash(int node_id){
+            return this.hashFunction.hashFunction(node_id);
         }
     }
 
     public class DoublyLinkedList {
 
-        private ListNode first = null;
-        private ListNode last = null;
+        private ListNode first;
+        private ListNode last;
         private int length;
+        private HashListNode hashListNode;
 
-        //TODO: find and remove functions
 
+        public DoublyLinkedList(HashListNode hashListNode){
+            this.hashListNode = hashListNode;
+        }
 
-        public void insert_first(ListNode value){
-            ListNode node = new ListNode(value,null,null);
+        public void insert_first(ListNode node){
             node.next = this.first;
             this.first = node;
             if(node.next == null){
@@ -375,18 +454,25 @@ public class Graph {
             this.length++;
         }
 
-//    public boolean find(Graph.Node node){
-//        ListNode listNode = first;
-//        while(listNode != null){
-//            if(listNode.value.getId() == node.getId()) {
-//                return true;
-//            }
-//            listNode = listNode.next;
-//        }
-//        return false;
-//    }
-
-
+        public void delete(ListNode listNode){
+            if(listNode == this.first && listNode == this.last){
+                this.first = null;
+                this.last = null;
+                return;
+            }
+            if(listNode == this.first){
+                this.first = listNode.next;
+                this.first.prev = null;
+                return;
+            }
+            if(listNode == this.last){
+                this.last = listNode.prev;
+                this.last.next = null;
+                return;
+            }
+            listNode.prev.next = listNode.next;
+            listNode.next.prev = listNode.prev;
+        }
     }
 
     public class ListNode{
@@ -394,11 +480,11 @@ public class Graph {
         private ListNode value;
         private ListNode next;
         private ListNode prev;
+        private HashListNode hashListNode;
 
-        public ListNode(ListNode value,ListNode next,ListNode prev){
+        public ListNode(ListNode value, HashListNode hashListNode){
             this.value = value;
-            this.next = next;
-            this.prev = prev;
+            this.hashListNode = hashListNode;
         }
 
     }
