@@ -8,19 +8,36 @@ public class Main {
         int id3 = 209424555;
 
 
-        Graph.Node node1 = new Graph.Node(id1,10);
-        Graph.Node node2 = new Graph.Node(id2,50);
-        Graph.Node node3 = new Graph.Node(id3,37);
+        Graph.Node node1 = new Graph.Node(id1,100);
+        Graph.Node node2 = new Graph.Node(id2,200);
+        Graph.Node node3 = new Graph.Node(id3,300);
+        Graph.Node node4 = new Graph.Node(123,400);
+        Graph.Node node5 = new Graph.Node(126,500);
 
-        Graph.Node [] array = new Graph.Node[3];
+
+        Graph.Node [] array = new Graph.Node[5];
         array[0] = node1;
         array[1] = node2;
         array[2] = node3;
+        array[3] = node4;
+        array[4] = node5;
 
         Graph graph = new Graph(array);
         graph.addEdge(node1.getId(),node2.getId());
         graph.addEdge(node1.getId(), node3.getId());
         graph.addEdge(node2.getId(), node3.getId());
+        graph.addEdge(123,126);
+
+
+        System.out.format("getNeighborhoodWeight is %s \n", graph.getNeighborhoodWeight(id2));
+
+        System.out.format("num Edges is %s \n", graph.getNumEdges());
+        System.out.format("num Nodes is %s \n", graph.getNumNodes());
+
+        System.out.format("max in max Heap is %s \n", graph.maxHeap.Max().getKey());
+
+
+
 
 
 

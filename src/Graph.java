@@ -13,7 +13,7 @@ import java.util.Random;
  */
 public class Graph {
 
-    private MaxHeap maxHeap;
+    public MaxHeap maxHeap;
     private HashTable hashTable;
     private int num_Nodes;
     private int num_Edges;
@@ -182,14 +182,20 @@ public class Graph {
         }
     }
 
+    /**
+     * This class represents MaxHeap
+     */
+
     public class MaxHeap {
 
         private heapNode [] arr;
-        private int lastIndex = 0;
-        private int size;
+        private int lastIndex;
+
+        /** O(N)
+         * constructor of the Max Heap
+         */
 
         public MaxHeap(heapNode [] arr){
-            this.size = arr.length;
             this.arr = arr;
             lastIndex = arr.length-1;
             array_to_MaxHeap();
@@ -202,15 +208,27 @@ public class Graph {
             heapify_up(lastIndex);
         }
 
+        /** O(log n)
+         * delete the max node in the heap
+         */
+
         public void DeleteMax(){
             switchNodes(1,lastIndex);
             lastIndex--;
             heapify_down(1);
         }
 
+        /** O(1)
+         * @return the max node in the heap
+         */
+
         public heapNode Max(){
             return arr[1];
         }
+
+        /** O(log n)
+         * decrease the key of the node in index i by sum
+         */
 
         public void decrease_key(int i, int sum){
             arr[i].setKey(arr[i].getKey()+sum);
@@ -220,6 +238,10 @@ public class Graph {
                 heapify_up(i);
             }
         }
+
+        /** O(log n)
+         * delete the node in index i
+         */
 
         public void Delete(int i){
             if(i==1){
@@ -237,6 +259,10 @@ public class Graph {
             }
         }
 
+        /** O(log n)
+         * make heapify up to the node in index i if needed
+         */
+
         public void heapify_up(int i){
             int parent = getParentIndex(i);
             while (i > 1 && arr[i].key > arr[parent].key){
@@ -244,6 +270,10 @@ public class Graph {
                 i = parent;
             }
         }
+
+        /** O(log n)
+         * make heapify down to the node at index i if needed
+         */
 
         public void heapify_down(int i){
             int left = getLeftIndex(i);
@@ -265,18 +295,37 @@ public class Graph {
             }
         }
 
+        /** O(1)
+         * @return the index of the left child
+         */
+
         private int getLeftIndex(int i) {
             return i*2;
         }
+
+        /** O(1)
+         * @return the index of the right child of given node
+         */
+
         private int getRightIndex(int i) {
             return i*2+1;
         }
+
+        /** O(1)
+         * @return the index of the parent of given node
+         * if the node is the root so it returns the index of the root (1)
+         */
+
         private int getParentIndex(int i) {
             if(i==1){
                 return 1;
             }
             return (int) Math.floor(i/2);
         }
+
+        /** O(1)
+         * This function is used for switch 2 nodes in max Heap
+         */
 
         private void switchNodes(int i, int parent) {
             heapNode temp = arr[i];
@@ -288,7 +337,6 @@ public class Graph {
 
         /** O(N)
          * turn an array to maxHeap
-         *
          */
 
         public void array_to_MaxHeap() {
@@ -299,33 +347,47 @@ public class Graph {
         }
     }
 
+    /**
+     * This class represents node in MaxHeap
+     */
+
     public class heapNode {
         private int key; //sumWieghts
         private int value; // id of the node
         private int index; // index in maxHeap
         private HashListNode hashListNode; //pointer to the node in hashtable
 
+        /** O(1)
+         * constructor of node
+         */
+
         public heapNode(int sumWeights,int idOfTheNode){
             this.key = sumWeights;
             this.value = idOfTheNode;
         }
 
+        /** O(1)
+         * @return the key of the node
+         */
+
         public int getKey() {
             return key;
         }
+
+        /** O(1)
+         * set the key of the node to the given key
+         */
 
         public void setKey(int key) {
             this.key = key;
         }
 
-        public int getValue() {
-            return value;
-        }
-
-        public void setValue(int value) {
-            this.value = value;
-        }
     }
+
+    /**
+     * This class represents DoublyLinkedList
+     * this list is used for dealing with collisions in hash table (chaining method)
+     */
 
     public class DoublyHashLinkedList {
 
@@ -333,6 +395,9 @@ public class Graph {
         private HashListNode last = null;
         private int length;
 
+        /** O(1)
+         * insert new node to the start of the list
+         */
 
         public void insert_first(Graph.Node value, Graph.heapNode heapNode){
             HashListNode node = new HashListNode(value,heapNode);
@@ -346,6 +411,10 @@ public class Graph {
             this.length++;
         }
 
+        /** O(1) expected
+         * @return the node with the given node_id
+         */
+
         public HashListNode find(int node_id){
             HashListNode listNode = first;
             while(listNode != null){
@@ -356,6 +425,10 @@ public class Graph {
             }
             return null;
         }
+
+        /** O(1)
+         * remove the given node from the linked list
+         */
 
         public void remove(HashListNode listNode){
             if(listNode == this.first && listNode == this.last){
@@ -378,6 +451,10 @@ public class Graph {
         }
     }
 
+    /**
+     * This class represents node in Doubly Hash LinkedList
+     */
+
     public class HashListNode {
 
         private Graph.Node value; // graph node
@@ -386,24 +463,47 @@ public class Graph {
         private Graph.heapNode heapNode; // pointer to max heap
         private DoublyLinkedList neighbors; // neighbors
 
+        /** O(1)
+         * constructor of node
+         */
+
         public HashListNode(Graph.Node value, Graph.heapNode heapNode) {
             this.value = value;
             this.heapNode = heapNode;
             this.neighbors = new DoublyLinkedList(this);
         }
 
+        /** O(1)
+         * @return the value (Graph node) of the node
+         */
+
         public Graph.Node getValue() {
             return value;
         }
+
+        /** O(1)
+         * @return the corresponding node in Max Heap
+         */
 
         public Graph.heapNode getHeapNode() {
             return heapNode;
         }
     }
 
+    /**
+     * This interface is used for hash function
+     */
+
     interface hashable{
         public int hashFunction(int x);
     }
+
+    /**
+     * This class represents Hash Table
+     * the hash function is from the modular hash function family
+     */
+
+    //TODO: this is where i finished
 
     public class HashTable {
 
@@ -452,6 +552,11 @@ public class Graph {
         }
     }
 
+    /**
+     * This class represents DoublyLinkedList
+     * this list is used for storing all the neighbors of node
+     */
+
     public class DoublyLinkedList {
 
         private ListNode first;
@@ -495,6 +600,10 @@ public class Graph {
             listNode.next.prev = listNode.prev;
         }
     }
+
+    /**
+     * This class represents node in Doubly LinkedList
+     */
 
     public class ListNode{
 
