@@ -22,5 +22,7 @@ public class Main {
         graph.addEdge(node1.getId(), node3.getId());
         graph.addEdge(node2.getId(), node3.getId());
 
+
+
     }
 }

@@ -27,16 +27,18 @@ public class Graph {
      * @param nodes - an array of node objects
      */
     public Graph(Node [] nodes){
-        //TODO: init max heap in O(N)
-        this.maxHeap = new MaxHeap(nodes.length);
         hashTable = new HashTable(nodes.length);
+        heapNode [] arr = new heapNode[nodes.length+1];
+        int i=1;
         for(Node node : nodes){
             heapNode heapNode = new heapNode(node.weight, node.id);
+            heapNode.index = i;
             HashListNode hashListNode = new HashListNode(node,heapNode);
             hashTable.Insert(hashListNode);
-            this.maxHeap.insert(heapNode);
+            arr[i++] = heapNode;
             heapNode.hashListNode = hashListNode;
         }
+        this.maxHeap = new MaxHeap(arr);
         num_Nodes = nodes.length;
     }
 
@@ -186,10 +188,11 @@ public class Graph {
         private int lastIndex = 0;
         private int size;
 
-        public MaxHeap(int size){
-            this.arr = new heapNode[size+1];
-            this.arr[0] = null;
-            this.size = size;
+        public MaxHeap(heapNode [] arr){
+            this.size = arr.length;
+            this.arr = arr;
+            lastIndex = arr.length-1;
+            array_to_MaxHeap();
         }
 
         public void insert(heapNode node){
@@ -245,20 +248,20 @@ public class Graph {
         public void heapify_down(int i){
             int left = getLeftIndex(i);
             int right = getRightIndex(i);
-            int smallest = i;
+            int largest = i;
             if(left <= lastIndex){
-                if(arr[left].key > arr[smallest].key){
-                    smallest = left;
+                if(arr[left].key > arr[largest].key){
+                    largest = left;
                 }
             }
             if(right <= lastIndex){
-                if(arr[right].key > arr[smallest].key){
-                    smallest = right;
+                if(arr[right].key > arr[largest].key){
+                    largest = right;
                 }
             }
-            if(smallest > i){
-                switchNodes(i,smallest);
-                heapify_down(smallest);
+            if(largest > i){
+                switchNodes(i,largest);
+                heapify_down(largest);
             }
         }
 
@@ -269,6 +272,9 @@ public class Graph {
             return i*2+1;
         }
         private int getParentIndex(int i) {
+            if(i==1){
+                return 1;
+            }
             return (int) Math.floor(i/2);
         }
 
@@ -278,6 +284,18 @@ public class Graph {
             arr[parent] = temp;
             arr[i].index = i;
             arr[parent].index = parent;
+        }
+
+        /** O(N)
+         * turn an array to maxHeap
+         *
+         */
+
+        public void array_to_MaxHeap() {
+            int index = (int) Math.floor(lastIndex/2);
+            for(int i=index;i>0;i--){
+                heapify_down(i);
+            }
         }
     }
 
