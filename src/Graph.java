@@ -503,13 +503,15 @@ public class Graph {
      * the hash function is from the modular hash function family
      */
 
-    //TODO: this is where i finished
-
     public class HashTable {
 
         private hashable hashFunction;
         private DoublyHashLinkedList[] array;
         public static final int primeNumber = (10^9 + 9);
+
+        /** O(N)
+         * constructor of the table
+         */
 
         public HashTable(int size){
             CreateHashFunction(size);
@@ -518,6 +520,11 @@ public class Graph {
                 array[i] = new DoublyHashLinkedList();
             }
         }
+
+        /** O(1)
+         * the method creates hash function from the modular hash function family
+         */
+
         private void CreateHashFunction(int size){
             Random random = new Random();
             int a = random.nextInt(primeNumber - 2) + 1;
@@ -531,10 +538,18 @@ public class Graph {
             };
         }
 
+        /** O(1) expected
+         * @return the node in the table with id == node_id
+         */
+
         public HashListNode Find(int node_id){
             int IndexOfInsertion = hashFunction.hashFunction(node_id);
             return array[IndexOfInsertion].find(node_id);
         }
+
+        /** O(1) expected
+         * the function insert the given node to the table
+         */
 
         public void Insert(HashListNode hash_node){
             Graph.Node node = hash_node.getValue();
@@ -543,10 +558,18 @@ public class Graph {
                 this.array[IndexOfInsertion].insert_first(node,hash_node.getHeapNode());
             }
         }
+
+        /** O(1) expected
+         * the function delete the given node from the table
+         */
+
         public void Delete(HashListNode hash_node){
             int IndexOfDeletion = IndexOfHash(hash_node.value.id);
             this.array[IndexOfDeletion].remove(hash_node);
         }
+        /** O(1) expected
+         * @return the index in the array that the node with id == node_id should appear
+         */
         private int IndexOfHash(int node_id){
             return this.hashFunction.hashFunction(node_id);
         }
@@ -564,10 +587,18 @@ public class Graph {
         private int length;
         private HashListNode hashListNode;
 
+        /** O(1)
+         * constructor of Linked List
+         */
+
 
         public DoublyLinkedList(HashListNode hashListNode){
             this.hashListNode = hashListNode;
         }
+
+        /** O(1)
+         * insert new node to the start of the list
+         */
 
         public void insert_first(ListNode node){
             node.next = this.first;
@@ -579,6 +610,10 @@ public class Graph {
             }
             this.length++;
         }
+
+        /** O(1)
+         * delete the given node from the list
+         */
 
         public void delete(ListNode listNode){
             if(listNode == this.first && listNode == this.last){
@@ -611,6 +646,10 @@ public class Graph {
         private ListNode next;
         private ListNode prev;
         private HashListNode hashListNode;
+
+        /** O(1)
+         * constructor of the list node
+         */
 
         public ListNode(ListNode value, HashListNode hashListNode){
             this.value = value;
