@@ -1,8 +1,17 @@
-import java.util.Random;
+import java.util.*;
 
 public class Main {
 
     public static void main(String[] args) {
+        //myTester();
+        measurements();
+
+
+
+
+
+    }
+    public static void myTester(){
         int id1 = 314649286;
         int id2 = 208295691;
         int id3 = 209424555;
@@ -36,10 +45,34 @@ public class Main {
 
         System.out.format("max in max Heap is %s \n", graph.maxHeap.Max().getKey());
 
-
-
-
-
-
+    }
+    public static void measurements(){
+        int max_rank = 0;
+        for (int i = 6; i < 22; i++){
+            Graph.Node [] array_of_nodes = new Graph.Node [(int)Math.pow(2,i)];
+            for (int j = 0; j < (int)Math.pow(2,i); j++){
+                array_of_nodes[j] = new Graph.Node(j,1);
+            }
+            Graph m_graph = new Graph(array_of_nodes);
+            Random random = new Random();
+            Map<Integer,Set<Integer>> map = new HashMap<>();
+            while (m_graph.getNumEdges() < i){
+                int n1  = random.nextInt((int)Math.pow(2,i));
+                int n2  = random.nextInt((int)Math.pow(2,i));
+                if (map.containsKey(n1) && map.containsKey(n2)){
+                    if (n1 != n2 && !map.get(n1).contains(n2) && !map.get(n2).contains(n1)){
+                        map.get(n1).add(n2);
+                        map.get(n2).add(n1);
+                        m_graph.addEdge(n1,n2);
+                    }
+                }
+                else {
+                    map.put(n1, new HashSet<>(n2));
+                    map.put(n2, new HashSet<>(n1));
+                    m_graph.addEdge(n1,n2);
+                }
+            }
+            System.out.println("Maximum rank in graph number " + i +" is " + max_rank);
+        }
     }
 }
