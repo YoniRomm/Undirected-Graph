@@ -645,7 +645,7 @@ public class Graph {
         private ListNode value;
         private ListNode next;
         private ListNode prev;
-        private HashListNode hashListNode;
+        private HashListNode hashListNode; //pointer to the hashListNode that this node is in his neighbors list
 
         /** O(1)
          * constructor of the list node
