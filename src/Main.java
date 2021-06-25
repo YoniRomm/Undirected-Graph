@@ -6,7 +6,10 @@ public class Main {
 
     public static void main(String[] args) {
         //myTester();
+
         measurements();
+
+
 
 //        Pair<Integer,Integer> pair = new Pair<>(1,2);
 //        Pair<Integer,Integer> pair1 = new Pair<>(1,2);
@@ -66,9 +69,9 @@ public class Main {
             for (int j = 0; j < (int)Math.pow(2,i); j++){
                 array_of_nodes[j] = new Graph.Node(j,1);
             }
-            System.out.println("finished array_of_nodes");
+//            System.out.println("finished array_of_nodes");
             Graph m_graph = new Graph(array_of_nodes);
-            System.out.println("finished init");
+//            System.out.println("finished init");
             Random random = new Random();
             Set<Pair<Integer,Integer>> set = new HashSet<>();
             while (set.size() != num_edges){
@@ -80,6 +83,9 @@ public class Main {
                     m_graph.addEdge(n1,n2);
                 }
             }
+            Graph.Node node = m_graph.maxNeighborhoodWeight();
+            max_rank = m_graph.getNeighborhoodWeight(node.getId())-1;
+
             System.out.println("Maximum rank in graph number " + i +" is " + max_rank);
         }
     }

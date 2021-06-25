@@ -37,11 +37,9 @@ public class Graph {
             heapNode.index = i;
             HashListNode hashListNode = new HashListNode(node,heapNode);
             hashTable.Insert(hashListNode);
-//            System.out.println("insert made " + i);
             arr[i++] = heapNode;
             heapNode.hashListNode = hashListNode;
         }
-        System.out.println("finished for");
         this.maxHeap = new MaxHeap(arr);
         num_Nodes = nodes.length;
     }
@@ -64,7 +62,6 @@ public class Graph {
      * Otherwise, the function returns -1.
      */
     public int getNeighborhoodWeight(int node_id){
-        //TODO: check this function in tester
         HashListNode hashListNode = this.hashTable.Find(node_id);
         if(hashListNode == null){
             return -1;
@@ -512,7 +509,8 @@ public class Graph {
 
         private hashable hashFunction;
         private DoublyHashLinkedList[] array;
-        public static final int primeNumber = (10^9 + 9);
+        public final int primeNumber = (int) (Math.pow(10,9) + 9);
+
 
         /** O(N)
          * constructor of the table
@@ -524,7 +522,7 @@ public class Graph {
             for(int i=0;i<array.length;i++){
                 array[i] = new DoublyHashLinkedList();
             }
-            System.out.println("finished init hashTable");
+//            System.out.println("finished init hashTable");
         }
 
         /** O(1)
@@ -540,6 +538,8 @@ public class Graph {
                 int i = 0;
                 l = (long) a * x + b;
                 i = (int) (l % primeNumber);
+//                System.out.format("a = %s, b= %s,x= %s, l= %s p = %s, i= %s, return = %s \n"
+//                        ,a,b,x,l,primeNumber,i,i%size);
                 return i % size;
             };
         }
@@ -561,12 +561,7 @@ public class Graph {
         public void Insert(HashListNode hash_node){
             Graph.Node node = hash_node.getValue();
             int IndexOfInsertion = IndexOfHash(node.getId());
-            //this works in 30 seconds (old code)
-//            if (Find(node.getId()) == null){
-//                this.array[IndexOfInsertion].insert_first(node,hash_node.getHeapNode());
-//            }
-            //this works in 10 seconds
-            if(this.array[IndexOfInsertion].find(node.getId()) != null){
+            if(this.array[IndexOfInsertion].find(node.getId()) == null){
                 this.array[IndexOfInsertion].insert_first(node,hash_node.getHeapNode());
             }
         }
