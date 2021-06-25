@@ -520,7 +520,6 @@ public class Graph {
             for(int i=0;i<array.length;i++){
                 array[i] = new DoublyHashLinkedList();
             }
-//            System.out.println("finished init hashTable");
         }
 
         /** O(1)
