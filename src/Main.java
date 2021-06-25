@@ -1,3 +1,5 @@
+import javafx.util.Pair;
+
 import java.util.*;
 
 public class Main {
@@ -6,6 +8,16 @@ public class Main {
         //myTester();
         measurements();
 
+//        Pair<Integer,Integer> pair = new Pair<>(1,2);
+//        Pair<Integer,Integer> pair1 = new Pair<>(1,2);
+//
+//        Set<Pair<Integer,Integer>> set = new HashSet<>();
+//        set.add(pair);
+//        set.add(pair1);
+//        System.out.println(set);
+
+
+//        System.out.println(pair.equals(pair1));
 
 
 
@@ -49,26 +61,22 @@ public class Main {
     public static void measurements(){
         int max_rank = 0;
         for (int i = 6; i < 22; i++){
+            int num_edges = (int) Math.pow(2,i);
             Graph.Node [] array_of_nodes = new Graph.Node [(int)Math.pow(2,i)];
             for (int j = 0; j < (int)Math.pow(2,i); j++){
                 array_of_nodes[j] = new Graph.Node(j,1);
             }
+            System.out.println("finished array_of_nodes");
             Graph m_graph = new Graph(array_of_nodes);
+            System.out.println("finished init");
             Random random = new Random();
-            Map<Integer,Set<Integer>> map = new HashMap<>();
-            while (m_graph.getNumEdges() < i){
-                int n1  = random.nextInt((int)Math.pow(2,i));
-                int n2  = random.nextInt((int)Math.pow(2,i));
-                if (map.containsKey(n1) && map.containsKey(n2)){
-                    if (n1 != n2 && !map.get(n1).contains(n2) && !map.get(n2).contains(n1)){
-                        map.get(n1).add(n2);
-                        map.get(n2).add(n1);
-                        m_graph.addEdge(n1,n2);
-                    }
-                }
-                else {
-                    map.put(n1, new HashSet<>(n2));
-                    map.put(n2, new HashSet<>(n1));
+            Set<Pair<Integer,Integer>> set = new HashSet<>();
+            while (set.size() != num_edges){
+                int n1  = random.nextInt(num_edges);
+                int n2 = n1 + 1 + random.nextInt(num_edges-n1);
+                Pair<Integer,Integer> pair = new Pair<>(n1,n2);
+                boolean b = set.add(pair);
+                if(b){
                     m_graph.addEdge(n1,n2);
                 }
             }

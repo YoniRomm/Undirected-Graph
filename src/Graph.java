@@ -37,9 +37,11 @@ public class Graph {
             heapNode.index = i;
             HashListNode hashListNode = new HashListNode(node,heapNode);
             hashTable.Insert(hashListNode);
+//            System.out.println("insert made " + i);
             arr[i++] = heapNode;
             heapNode.hashListNode = hashListNode;
         }
+        System.out.println("finished for");
         this.maxHeap = new MaxHeap(arr);
         num_Nodes = nodes.length;
     }
@@ -522,6 +524,7 @@ public class Graph {
             for(int i=0;i<array.length;i++){
                 array[i] = new DoublyHashLinkedList();
             }
+            System.out.println("finished init hashTable");
         }
 
         /** O(1)
@@ -546,7 +549,8 @@ public class Graph {
          */
 
         public HashListNode Find(int node_id){
-            int IndexOfInsertion = hashFunction.hashFunction(node_id);
+//            int IndexOfInsertion = hashFunction.hashFunction(node_id);
+            int IndexOfInsertion = IndexOfHash(node_id); //changed here
             return array[IndexOfInsertion].find(node_id);
         }
 
@@ -557,7 +561,12 @@ public class Graph {
         public void Insert(HashListNode hash_node){
             Graph.Node node = hash_node.getValue();
             int IndexOfInsertion = IndexOfHash(node.getId());
-            if (Find(node.getId()) == null){
+            //this works in 30 seconds (old code)
+//            if (Find(node.getId()) == null){
+//                this.array[IndexOfInsertion].insert_first(node,hash_node.getHeapNode());
+//            }
+            //this works in 10 seconds
+            if(this.array[IndexOfInsertion].find(node.getId()) != null){
                 this.array[IndexOfInsertion].insert_first(node,hash_node.getHeapNode());
             }
         }
