@@ -69,15 +69,20 @@ public class Main {
             for (int j = 0; j < (int)Math.pow(2,i); j++){
                 array_of_nodes[j] = new Graph.Node(j,1);
             }
-//            System.out.println("finished array_of_nodes");
             Graph m_graph = new Graph(array_of_nodes);
-//            System.out.println("finished init");
             Random random = new Random();
             Set<Pair<Integer,Integer>> set = new HashSet<>();
             while (set.size() != num_edges){
-                int n1  = random.nextInt(num_edges);
-                int n2 = n1 + 1 + random.nextInt(num_edges-n1);
+                int n1 = random.nextInt(num_edges);
+                int n2 = random.nextInt(num_edges);
+                if(n2 == n1){
+                    continue;
+                }
                 Pair<Integer,Integer> pair = new Pair<>(n1,n2);
+                Pair<Integer,Integer> pair2 = new Pair<>(n2,n1);
+                if (set.contains(pair) || set.contains(pair2)) {
+                    continue;
+                }
                 boolean b = set.add(pair);
                 if(b){
                     m_graph.addEdge(n1,n2);

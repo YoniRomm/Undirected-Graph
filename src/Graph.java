@@ -97,8 +97,6 @@ public class Graph {
         this.maxHeap.decrease_key(index2,hashListNode1.value.weight); // O(log n)
 
         this.num_Edges++;
-        //TODO: check numedges and nodes
-
         return true;
     }
 
@@ -538,8 +536,6 @@ public class Graph {
                 int i = 0;
                 l = (long) a * x + b;
                 i = (int) (l % primeNumber);
-//                System.out.format("a = %s, b= %s,x= %s, l= %s p = %s, i= %s, return = %s \n"
-//                        ,a,b,x,l,primeNumber,i,i%size);
                 return i % size;
             };
         }
@@ -549,8 +545,7 @@ public class Graph {
          */
 
         public HashListNode Find(int node_id){
-//            int IndexOfInsertion = hashFunction.hashFunction(node_id);
-            int IndexOfInsertion = IndexOfHash(node_id); //changed here
+            int IndexOfInsertion = IndexOfHash(node_id);
             return array[IndexOfInsertion].find(node_id);
         }
 
